@@ -21,7 +21,7 @@ class Downloader:
     async def _download(self, session, file: dict):
         async with session.get(self.__root_url + file['path']) as resp_with_file:
             if resp_with_file.status == 200:
-                async with aiofiles.open(self.__download_path + file['name'], 'wb') as f:
+                async with aiofiles.open(self.__download_path + '/' + file['name'], 'wb') as f:
                     try:
                         await f.write(await resp_with_file.read())
                     except aiohttp.ClientPayloadError:
@@ -43,3 +43,4 @@ class Downloader:
                 tasks = [asyncio.create_task(self._download(session, file)) for file in self.__not_loaded_files]
                 self.__not_loaded_files = []
                 await asyncio.gather(*tasks)
+        return self.__download_path
