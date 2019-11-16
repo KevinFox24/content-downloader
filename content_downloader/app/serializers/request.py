@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields, validates, ValidationError
 
 
-class Content2chRequestSchema(Schema):
+class Content2chRequestValidateSchema(Schema):
     _patterns = ('https://2ch', 'res', 'html')
 
     threadUrl = fields.Str(required=True, example='https://2ch.hk/pr/res/1512752.html')
@@ -14,4 +14,20 @@ class Content2chRequestSchema(Schema):
             raise ValidationError(f"'{value}' does not look like 2ch thread url.")
 
 
-content_2ch_request_schema = Content2chRequestSchema()
+class Content2chThreadObjectSchema(Schema):
+    _json = '.json'
+
+    thread_url_json = fields.Method("jsonify_url")
+    thread_name = fields.Method("get_thread_name")
+
+
+    def jsonify_url(self, obj):
+        return '.'.join(obj['threadUrl'].split('.')[:-1]) + self._json
+
+    def get_thread_name(self, obj):
+        return obj['threadUrl'].split('/')[-1].split('.')[0]
+
+
+content_2ch_request_validate_schema = Content2chRequestValidateSchema()
+content_2ch_thread_object_schema = Content2chThreadObjectSchema()
+
