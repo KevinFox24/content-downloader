@@ -1,7 +1,7 @@
 from aiohttp import web
 from .serializers.request import content_2ch_request_schema
-from content_downloader.for_2ch.downloader import Downloader
-from .ext.zipper import zipify_content, clean_folder
+from content_downloader.ext.for_2ch.downloader import Downloader
+from content_downloader.ext.zipper import zipify_content, clean_folder
 
 routes = web.RouteTableDef()
 
